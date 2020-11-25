@@ -1,0 +1,25 @@
+{
+  "name": "lines-game",
+  "version": "0.0.1",
+  "description": "The core game of Lines.",
+  "scripts": {
+    "start": "cd src && webpack-dev-server",
+    "build": "cd src && webpack --env.production"
+  },
+  "author": "Samuel Sharp",
+  "license": "ISC",
+  "dependencies": {
+    "@babylonjs/core": "^4.0.3",
+    "@babylonjs/inspector": "^4.0.3",
+    "colyseus.js": "^0.14.0",
+    "jwt-decode": "^3.1.2",
+    "noa-engine": "github:andyhall/noa#develop",
+    "toastify-js": "^1.9.3",
+    "voxel-crunch": "^0.2.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

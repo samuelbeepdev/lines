@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <title>Lines</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <style type="text/css">
+    body {
+      background-color: black;
+      margin: 0px;
+      overflow: hidden;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+
+    #reticle {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      margin: -10px 0 0 -10px;
+      z-index: 99;
+      color: #00a1de;
+      text-align: center;
+    }
+
+    #noa-canvas, #reticle {
+        display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="reticle">(+)</div>
+  <script type="text/javascript" src="babylon.js"></script>
+  <script type="text/javascript" src="bundle.js"></script>
+</body>
+
+</html>
