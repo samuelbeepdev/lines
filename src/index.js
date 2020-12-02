@@ -90,12 +90,12 @@ client.joinOrCreate("game").then(room => {
     }).showToast()
     console.log(room)
     const noa = new Engine({
-        chunkSize: 1,
+        chunkSize: 64,
         chunkAddDistance: 2.5,
         chunkRemoveDistance: 3.5,
     })
-    noa.registry.registerMaterial('bkg', [0, 165, 224], null)
-    noa.registry.registerMaterial('line', [0, 0, 0], null)
+    noa.registry.registerMaterial('bkg', [0, 0.631372549, 0.870588235], null)
+    noa.registry.registerMaterial('line', [0.976470588, 0.274509804, 0.109803922], null)
     const bkgID = noa.registry.registerBlock(1, { material: 'bkg' })
     const lineID = noa.registry.registerBlock(2, { material: 'line' })
     function getVoxelID(x, y, z) {
