@@ -2,7 +2,9 @@ import Engine from 'noa-engine'
 import jwt_decode from 'jwt-decode'
 import Toastify from 'toastify-js'
 import * as Colyseus from "colyseus.js"
-import { Mesh } from '@babylonjs/core/Meshes/mesh'
+import {
+    Mesh
+} from '@babylonjs/core/Meshes/mesh'
 var user;
 var inc = 0;
 try {
@@ -89,7 +91,6 @@ client.joinOrCreate("game").then(room => {
         backgroundColor: "#009b3a",
         stopOnFocus: true,
     }).showToast()
-    console.log(room)
     const noa = new Engine({
         chunkSize: 64,
         chunkAddDistance: 2.5,
@@ -97,15 +98,20 @@ client.joinOrCreate("game").then(room => {
     })
     noa.registry.registerMaterial('bkg', [0.976470588, 0.274509804, 0.109803922], null)
     noa.registry.registerMaterial('line', [0, 0.631372549, 0.870588235], null)
-    const bkgID = noa.registry.registerBlock(1, { material: 'bkg' })
-    const lineID = noa.registry.registerBlock(2, { material: 'line' })
+    const bkgID = noa.registry.registerBlock(1, {
+        material: 'bkg'
+    })
+    const lineID = noa.registry.registerBlock(2, {
+        material: 'line'
+    })
+
     function getVoxelID(x, y, z) {
         if (y < -3) return bkgID
         const height = 2 * Math.sin(x / 10) + 3 * Math.cos(z / 20)
         if (y < height) return bkgID
         return 0
     }
-    noa.world.on('worldDataNeeded', function (id, data, x, y, z) {
+    noa.world.on('worldDataNeeded', function(id, data, x, y, z) {
         for (var i = 0; i < data.shape[0]; i++) {
             for (var j = 0; j < data.shape[1]; j++) {
                 for (var k = 0; k < data.shape[2]; k++) {
@@ -131,14 +137,12 @@ client.joinOrCreate("game").then(room => {
     })
     room.onMessage("posrecieved", (pos) => {
         if (pos.player !== room.sessionId) {
-            if (inc == 10) {
-                var msg = new SpeechSynthesisUtterance(`The other player is at ${pos.x}. ${pos.y}. ${pos.z}. Hunt them down!`);
-                speechSynthesis.speak(msg);
-                console.log(pos)
+            if (inc == 100) {
+                var msg = new SpeechSynthesisUtterance(`The other player is at ${pos.x}. ${pos.y}. ${pos.z}. Hunt them down!`)
+                speechSynthesis.speak(msg)
                 inc = 0
             }
             inc++
-            console.log(inc)
         }
     })
     setInterval(() => {
