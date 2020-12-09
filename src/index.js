@@ -4,6 +4,7 @@ import Toastify from 'toastify-js'
 import * as Colyseus from "colyseus.js"
 import { Mesh } from '@babylonjs/core/Meshes/mesh'
 var user;
+var inc = 0;
 try {
     Toastify({
         text: `Loading...`,
@@ -69,16 +70,16 @@ Toastify({
     stopOnFocus: true,
 }).showToast()
 var client = new Colyseus.Client('wss://dev.lines.samuelsharp.com')
+Toastify({
+    text: `Joining room...`,
+    duration: 3000,
+    close: false,
+    gravity: 'top',
+    position: 'left',
+    backgroundColor: "#f9461c",
+    stopOnFocus: true,
+}).showToast()
 client.joinOrCreate("game").then(room => {
-    Toastify({
-        text: `Joining room...`,
-        duration: 3000,
-        close: false,
-        gravity: 'top',
-        position: 'left',
-        backgroundColor: "#f9461c",
-        stopOnFocus: true,
-    }).showToast()
     Toastify({
         text: `Joined room ${room.id} as ${user.name}`,
         duration: 5000,
@@ -94,8 +95,8 @@ client.joinOrCreate("game").then(room => {
         chunkAddDistance: 2.5,
         chunkRemoveDistance: 3.5,
     })
-    noa.registry.registerMaterial('bkg', [0, 0.631372549, 0.870588235], null)
-    noa.registry.registerMaterial('line', [0.976470588, 0.274509804, 0.109803922], null)
+    noa.registry.registerMaterial('bkg', [0.976470588, 0.274509804, 0.109803922], null)
+    noa.registry.registerMaterial('line', [0, 0.631372549, 0.870588235], null)
     const bkgID = noa.registry.registerBlock(1, { material: 'bkg' })
     const lineID = noa.registry.registerBlock(2, { material: 'line' })
     function getVoxelID(x, y, z) {
@@ -128,9 +129,28 @@ client.joinOrCreate("game").then(room => {
         mesh: mesh,
         offset: [0, h / 2, 0],
     })
+    room.onMessage("posrecieved", (pos) => {
+        if (pos.player !== room.sessionId) {
+            if (inc == 10) {
+                var msg = new SpeechSynthesisUtterance(`The other player is at ${pos.x}. ${pos.y}. ${pos.z}. Hunt them down!`);
+                speechSynthesis.speak(msg);
+                console.log(pos)
+                inc = 0
+            }
+            inc++
+            console.log(inc)
+        }
+    })
     setInterval(() => {
         noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]))
-    }, 1)
+        document.querySelector('#reticle').innerText = `${Math.round(noa.ents.getPosition(noa.playerEntity)[0])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[1])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[2])}`
+        room.send("playerpos", {
+            player: room.sessionId,
+            x: Math.round(noa.ents.getPosition(noa.playerEntity)[0]),
+            y: Math.round(noa.ents.getPosition(noa.playerEntity)[1]),
+            z: Math.round(noa.ents.getPosition(noa.playerEntity)[2])
+        })
+    }, 100)
 }).catch(e => {
     Toastify({
         text: `Error joining room: ${e}`,
