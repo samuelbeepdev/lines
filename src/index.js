@@ -98,11 +98,15 @@ client.joinOrCreate("game").then(room => {
     })
     noa.registry.registerMaterial('bkg', [0.976470588, 0.274509804, 0.109803922], null)
     noa.registry.registerMaterial('line', [0, 0.631372549, 0.870588235], null)
+    noa.registry.registerMaterial('opponent', [0.77647058823, 0.04705882352, 0.18823529411], null)
     const bkgID = noa.registry.registerBlock(1, {
         material: 'bkg'
     })
     const lineID = noa.registry.registerBlock(2, {
         material: 'line'
+    })
+    const opponentID = noa.registry.registerBlock(3, {
+        material: 'opponent'
     })
 
     function getVoxelID(x, y, z) {
@@ -137,6 +141,7 @@ client.joinOrCreate("game").then(room => {
     })
     room.onMessage("posrecieved", (pos) => {
         if (pos.player !== room.sessionId) {
+            noa.setBlock(opponentID, pos.x, pos.y - 1, pos.z)
             if (inc == 100) {
                 var msg = new SpeechSynthesisUtterance(`The other player is at ${pos.x}. ${pos.y}. ${pos.z}. Hunt them down!`)
                 speechSynthesis.speak(msg)
@@ -146,7 +151,7 @@ client.joinOrCreate("game").then(room => {
         }
     })
     setInterval(() => {
-        noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]))
+        noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]) - 2)
         document.querySelector('#reticle').innerText = `${Math.round(noa.ents.getPosition(noa.playerEntity)[0])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[1])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[2])}`
         room.send("playerpos", {
             player: room.sessionId,
