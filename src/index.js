@@ -97,7 +97,7 @@ client.joinOrCreate("game").then(room => {
         chunkAddDistance: 2.5,
         chunkRemoveDistance: 3.5,
     })
-    noa.registry.registerMaterial('line', [0.976470588, 0.274509804, 0.109803922], null)
+    noa.registry.registerMaterial('line', [0, 0.639215686, 0.870588235], null)
     noa.registry.registerMaterial('bkg', [0.384313725, 0.211764706, 0.105882353], null)
     noa.registry.registerMaterial('opponent', [0.77647058823, 0.04705882352, 0.18823529411], null)
     const bkgID = noa.registry.registerBlock(1, {
