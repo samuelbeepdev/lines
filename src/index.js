@@ -1,12 +1,13 @@
 import Engine from 'noa-engine'
 import jwt_decode from 'jwt-decode'
 import Toastify from 'toastify-js'
-import * as Colyseus from "colyseus.js"
+import * as Colyseus from 'colyseus.js'
+import * as Mousetrap from 'mousetrap'
 import {
     Mesh
 } from '@babylonjs/core/Meshes/mesh'
 var user;
-var inc = 0;
+var opcoords;
 try {
     Toastify({
         text: `Loading...`,
@@ -142,13 +143,12 @@ client.joinOrCreate("game").then(room => {
     room.onMessage("posrecieved", (pos) => {
         if (pos.player !== room.sessionId) {
             noa.setBlock(opponentID, pos.x, pos.y - 1, pos.z)
-            if (inc == 100) {
-                var msg = new SpeechSynthesisUtterance(`The other player is at ${pos.x}. ${pos.y}. ${pos.z}. Hunt them down!`)
-                speechSynthesis.speak(msg)
-                inc = 0
-            }
-            inc++
+            opcoords = [pos.x, pos.y, pos.z]
         }
+    })
+    Mousetrap.bind('`', () => {
+        var msg = new SpeechSynthesisUtterance(`The other player is at ${opcoords[0]}. ${opcoords[1]}. ${opcoords[2]}. Hunt them down!`)
+        speechSynthesis.speak(msg)
     })
     setInterval(() => {
         noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]) - 2)
