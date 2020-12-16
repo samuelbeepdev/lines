@@ -97,8 +97,8 @@ client.joinOrCreate("game").then(room => {
         chunkAddDistance: 2.5,
         chunkRemoveDistance: 3.5,
     })
-    noa.registry.registerMaterial('bkg', [0.976470588, 0.274509804, 0.109803922], null)
-    noa.registry.registerMaterial('line', [0, 0.631372549, 0.870588235], null)
+    noa.registry.registerMaterial('line', [0.976470588, 0.274509804, 0.109803922], null)
+    noa.registry.registerMaterial('bkg', [0.384313725, 0.211764706, 0.105882353], null)
     noa.registry.registerMaterial('opponent', [0.77647058823, 0.04705882352, 0.18823529411], null)
     const bkgID = noa.registry.registerBlock(1, {
         material: 'bkg'
@@ -112,8 +112,8 @@ client.joinOrCreate("game").then(room => {
 
     function getVoxelID(x, y, z) {
         if (y < -3) return bkgID
-        const height = 2 * Math.sin(x / 10) + 3 * Math.cos(z / 20)
-        if (y < height) return bkgID
+        const height = 2 * Math.sin(x / 9) + 3 * Math.cos(z / 2)
+        if (y < height && Math.random() <= 0.4) return bkgID
         return 0
     }
     noa.world.on('worldDataNeeded', function(id, data, x, y, z) {
@@ -146,7 +146,7 @@ client.joinOrCreate("game").then(room => {
             opcoords = [pos.x, pos.y, pos.z]
         }
     })
-    Mousetrap.bind('`', () => {
+    Mousetrap.bind('shift', () => {
         var msg = new SpeechSynthesisUtterance(`The other player is at ${opcoords[0]}. ${opcoords[1]}. ${opcoords[2]}. Hunt them down!`)
         speechSynthesis.speak(msg)
     })
