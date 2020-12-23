@@ -3,11 +3,12 @@ import jwt_decode from 'jwt-decode'
 import Toastify from 'toastify-js'
 import * as Colyseus from 'colyseus.js'
 import * as Mousetrap from 'mousetrap'
+import './gamepad';
 import {
     Mesh
 } from '@babylonjs/core/Meshes/mesh'
-var user;
-var opcoords;
+var user
+var opcoords
 try {
     Toastify({
         text: `Loading...`,
@@ -111,9 +112,8 @@ client.joinOrCreate("game").then(room => {
     })
 
     function getVoxelID(x, y, z) {
-        if (y < -3) return bkgID
-        const height = 2 * Math.sin(x / 9) + 3 * Math.cos(z / 2)
-        if (y < height && Math.random() <= 0.4) return bkgID
+        if (y < -1) return bkgID
+        if (y < 0 && Math.random() <= 0.2) return bkgID
         return 0
     }
     noa.world.on('worldDataNeeded', function(id, data, x, y, z) {
@@ -150,8 +150,22 @@ client.joinOrCreate("game").then(room => {
         var msg = new SpeechSynthesisUtterance(`The other player is at ${opcoords[0]}. ${opcoords[1]}. ${opcoords[2]}. Hunt them down!`)
         speechSynthesis.speak(msg)
     })
+
+    function getplayerpos(index) {
+        const number = Math.round(noa.ents.getPosition(noa.playerEntity)[index]);
+        if (number == -0) {
+            return 0;
+        } else {
+            return number;
+        }
+    }
+
+    Mousetrap.bind('f', () => {
+        console.log(JSON.stringify(opcoords) == JSON.stringify([getplayerpos(0), getplayerpos(1), getplayerpos(2)]))
+    })
+    
     setInterval(() => {
-        noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]) - 2)
+        noa.setBlock(lineID, Math.round(noa.ents.getPosition(noa.playerEntity)[0]), Math.round(noa.ents.getPosition(noa.playerEntity)[1]) - 1, Math.round(noa.ents.getPosition(noa.playerEntity)[2]))
         document.querySelector('#reticle').innerText = `${Math.round(noa.ents.getPosition(noa.playerEntity)[0])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[1])}, ${Math.round(noa.ents.getPosition(noa.playerEntity)[2])}`
         room.send("playerpos", {
             player: room.sessionId,
